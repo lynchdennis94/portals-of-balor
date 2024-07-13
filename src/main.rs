@@ -102,6 +102,7 @@ fn main() -> bracket_lib::terminal::BError {
     use bracket_lib::terminal::BTermBuilder;
     let context: BTerm = BTermBuilder::simple80x50()
         .with_title("Portals of Balor")
+        .with_tile_dimensions(16, 16)
         .build()?;
     let mut gs: State = State { ecs: World::new() };
 
