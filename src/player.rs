@@ -1,7 +1,7 @@
-use crate::Viewshed;
+use crate::{RunState, Viewshed};
 
 use super::{Map, Player, Position, State, TileType, MAP_HEIGHT, MAP_WIDTH};
-use bracket_lib::terminal::{BTerm, VirtualKeyCode};
+use bracket_lib::terminal::{BTerm, Point, VirtualKeyCode};
 use specs::prelude::*;
 use std::cmp::{max, min};
 
@@ -20,13 +20,16 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
             pos.y = min(MAP_HEIGHT - 1, max(0, possible_y));
 
             viewshed.dirty = true;
+            let mut ppos = ecs.write_resource::<Point>();
+            ppos.x = pos.x;
+            ppos.y = pos.y;
         }
     }
 }
 
-pub fn player_input(gs: &mut State, ctx: &mut BTerm) {
+pub fn player_input(gs: &mut State, ctx: &mut BTerm) -> RunState {
     match ctx.key {
-        None => {}
+        None => return RunState::Paused,
         Some(key) => match key {
             VirtualKeyCode::Left | VirtualKeyCode::H | VirtualKeyCode::Numpad4 => {
                 try_move_player(-1, 0, &mut gs.ecs)
@@ -45,7 +48,8 @@ pub fn player_input(gs: &mut State, ctx: &mut BTerm) {
             VirtualKeyCode::B | VirtualKeyCode::Numpad1 => try_move_player(-1, 1, &mut gs.ecs),
             VirtualKeyCode::N | VirtualKeyCode::Numpad3 => try_move_player(1, 1, &mut gs.ecs),
             VirtualKeyCode::Numpad5 => try_move_player(0, 0, &mut gs.ecs),
-            _ => {}
+            _ => return RunState::Paused,
         },
     }
+    RunState::Running
 }
