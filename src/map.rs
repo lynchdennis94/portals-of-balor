@@ -1,5 +1,3 @@
-use crate::{Player, Viewshed};
-
 use super::Rect;
 use bracket_lib::{
     pathfinding::{Algorithm2D, BaseMap},
@@ -7,7 +5,7 @@ use bracket_lib::{
     random::RandomNumberGenerator,
     terminal::{BTerm, RGB},
 };
-use specs::{Join, World, WorldExt};
+use specs::World;
 use std::cmp::{max, min};
 
 pub const MAP_WIDTH: i32 = 80;
@@ -24,6 +22,8 @@ pub struct Map {
     pub rooms: Vec<Rect>,
     pub width: i32,
     pub height: i32,
+    pub revealed_tiles: Vec<bool>,
+    pub visible_tiles: Vec<bool>,
 }
 
 impl Map {
@@ -64,6 +64,8 @@ impl Map {
             rooms: Vec::new(),
             width: MAP_WIDTH,
             height: MAP_HEIGHT,
+            revealed_tiles: vec![false; (MAP_WIDTH * MAP_HEIGHT) as usize],
+            visible_tiles: vec![false; (MAP_WIDTH * MAP_HEIGHT) as usize],
         };
 
         const MAX_ROOMS: i32 = 30;
@@ -120,39 +122,34 @@ impl BaseMap for Map {
 }
 
 pub fn draw_map(ecs: &World, ctx: &mut BTerm) {
-    let mut viewsheds = ecs.write_storage::<Viewshed>();
-    let mut players = ecs.write_storage::<Player>();
     let map = ecs.fetch::<Map>();
 
-    for (_player, viewshed) in (&mut players, &mut viewsheds).join() {
-        let mut y = 0;
-        let mut x = 0;
-        for tile in map.tiles.iter() {
-            let pt = Point::new(x, y);
-            if viewshed.visible_tiles.contains(&pt) {
-                match tile {
-                    TileType::Floor => ctx.set(
-                        x,
-                        y,
-                        RGB::from_f32(0.5, 0.5, 0.5),
-                        RGB::from_f32(0., 0., 0.),
-                        0x2E,
-                    ),
-                    TileType::Wall => ctx.set(
-                        x,
-                        y,
-                        RGB::from_f32(0.0, 1.0, 0.0),
-                        RGB::from_f32(0., 0., 0.),
-                        0x23,
-                    ),
+    let mut y = 0;
+    let mut x = 0;
+    for (idx, tile) in map.tiles.iter().enumerate() {
+        if map.revealed_tiles[idx] {
+            let glyph;
+            let mut fg;
+            match tile {
+                TileType::Floor => {
+                    fg = RGB::from_f32(0.5, 0.5, 0.5);
+                    glyph = 0x2E;
+                }
+                TileType::Wall => {
+                    fg = RGB::from_f32(0.0, 1.0, 0.0);
+                    glyph = 0x23
                 }
             }
-
-            x += 1;
-            if x >= MAP_WIDTH {
-                x = 0;
-                y += 1;
+            if !map.visible_tiles[idx] {
+                fg = fg.to_greyscale();
             }
+            ctx.set(x, y, fg, RGB::from_f32(0., 0., 0.), glyph)
+        }
+
+        x += 1;
+        if x >= MAP_WIDTH {
+            x = 0;
+            y += 1;
         }
     }
 }
