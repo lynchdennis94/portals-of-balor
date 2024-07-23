@@ -9,6 +9,8 @@ mod player;
 pub use player::*;
 mod rect;
 pub use rect::Rect;
+mod visibility_system;
+pub use visibility_system::*;
 
 pub struct State {
     pub ecs: World,
@@ -20,8 +22,7 @@ impl GameState for State {
         player_input(self, ctx);
         self.run_systems();
 
-        let map = self.ecs.fetch::<Map>();
-        draw_map(&map.tiles, ctx);
+        draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
@@ -34,6 +35,8 @@ impl GameState for State {
 
 impl State {
     fn run_systems(&mut self) {
+        let mut vis = VisibilitySystem {};
+        vis.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -51,6 +54,7 @@ fn main() -> BError {
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
+    gs.ecs.register::<Viewshed>();
 
     // Add shared data for the world
     let map = Map::new_map_rooms_and_corridors();
@@ -70,6 +74,10 @@ fn main() -> BError {
             bg: RGB::named(bracket_lib::terminal::BLACK),
         })
         .with(Player {})
+        .with(Viewshed {
+            visible_tiles: Vec::new(),
+            range: 8,
+        })
         .build();
 
     bracket_lib::terminal::main_loop(context, gs)

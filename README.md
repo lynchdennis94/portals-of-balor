@@ -22,3 +22,4 @@ Week Two - Sections 2.2 and 2.3
 
 Week Three - Sections 2.4 and 2.5
 ----
+* I'm not entirely clear on the read vs. write storage usage in the tutorial; for example, when defining the visibility system, the position components are handled via WriteStorage. But the visibility system shouldn't be updating position components, so I've modified this to only use ReadStorage.

@@ -17,3 +17,9 @@ pub struct Renderable {
 
 #[derive(Component, Debug)]
 pub struct Player {}
+
+#[derive(Component, Debug)]
+pub struct Viewshed {
+    pub visible_tiles: Vec<bracket_lib::terminal::Point>,
+    pub range: i32,
+}
