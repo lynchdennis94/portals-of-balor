@@ -19,3 +19,6 @@ Week Two - Sections 2.2 and 2.3
 ----
 * At some point I know the tutorial will clean up the 'magic numbers', but they're already annoying me; I've added the constants for map height and width and cleaned up references to these values that were input directly. I've also updated the terminal builder to use these constants directly
 * I'm not _entirely_ sure I have the right placement/calls for the rect implementation. There's an existing rect implementation in bracket_lib, so I may have just made it more difficult to discern between the two. For now, I'm using the explicit super::Rect suggestion in the book, but this may be an opportunity to use the library in the future
+
+Week Three - Sections 2.4 and 2.5
+----
