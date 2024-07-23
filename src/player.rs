@@ -1,4 +1,4 @@
-use super::{xy_idx, Player, Position, State, TileType, MAP_HEIGHT, MAP_WIDTH};
+use super::{Map, Player, Position, State, TileType, MAP_HEIGHT, MAP_WIDTH};
 use bracket_lib::terminal::{BTerm, VirtualKeyCode};
 use specs::prelude::*;
 use std::cmp::{max, min};
@@ -6,13 +6,13 @@ use std::cmp::{max, min};
 pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut positions = ecs.write_storage::<Position>();
     let mut players = ecs.write_storage::<Player>();
-    let map = ecs.fetch::<Vec<TileType>>();
+    let map = ecs.fetch::<Map>();
 
     for (_player, pos) in (&mut players, &mut positions).join() {
         let possible_x = pos.x + delta_x;
         let possible_y = pos.y + delta_y;
-        let destination_idx = xy_idx(possible_x, possible_y);
-        if map[destination_idx] != TileType::Wall {
+        let destination_idx = map.xy_idx(possible_x, possible_y);
+        if map.tiles[destination_idx] != TileType::Wall {
             pos.x = min(MAP_WIDTH - 1, max(0, possible_x));
             pos.y = min(MAP_HEIGHT - 1, max(0, possible_y));
         }
