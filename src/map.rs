@@ -1,6 +1,6 @@
 use crate::MAP_COUNT;
 
-use super::{Rect, MAP_HEIGHT, MAP_WIDTH};
+use super::{MAP_HEIGHT, MAP_WIDTH};
 use bracket_lib::{
     pathfinding::{Algorithm2D, BaseMap},
     prelude::Point,
@@ -17,7 +17,6 @@ pub enum TileType {
 #[derive(Clone)]
 pub struct Map {
     pub tiles: Vec<TileType>,
-    pub rooms: Vec<Rect>,
     pub width: i32,
     pub height: i32,
     pub revealed_tiles: Vec<bool>,
@@ -33,7 +32,6 @@ impl Map {
     pub fn new() -> Map {
         Map {
             tiles: vec![TileType::Wall; MAP_COUNT],
-            rooms: Vec::new(),
             width: MAP_WIDTH,
             height: MAP_HEIGHT,
             revealed_tiles: vec![false; MAP_COUNT],

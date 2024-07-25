@@ -6,6 +6,7 @@ use crate::{spawner, Map, Position, Rect, MAP_HEIGHT, MAP_WIDTH};
 pub struct SimpleMapBuilder {
     map: Map,
     starting_position: Position,
+    rooms: Vec<Rect>,
 }
 
 impl MapBuilder for SimpleMapBuilder {
@@ -14,7 +15,7 @@ impl MapBuilder for SimpleMapBuilder {
     }
 
     fn spawn_entities(&mut self, ecs: &mut specs::World) {
-        for room in self.map.rooms.iter().skip(1) {
+        for room in self.rooms.iter().skip(1) {
             spawner::spawn_room(ecs, room);
         }
     }
@@ -33,6 +34,7 @@ impl SimpleMapBuilder {
         SimpleMapBuilder {
             map: Map::new(),
             starting_position: Position { x: 0, y: 0 },
+            rooms: Vec::new(),
         }
     }
 
@@ -50,7 +52,7 @@ impl SimpleMapBuilder {
             let y = rng.roll_dice(1, MAP_HEIGHT - h - 1) - 1;
             let new_room = Rect::new(x, y, w, h);
             let mut ok = true;
-            for other_room in self.map.rooms.iter() {
+            for other_room in self.rooms.iter() {
                 if new_room.intersect(other_room) {
                     ok = false
                 }
@@ -58,9 +60,9 @@ impl SimpleMapBuilder {
             if ok {
                 apply_room_to_map(&mut self.map, &new_room);
 
-                if !self.map.rooms.is_empty() {
+                if !self.rooms.is_empty() {
                     let (new_x, new_y) = new_room.center();
-                    let (prev_x, prev_y) = self.map.rooms[self.map.rooms.len() - 1].center();
+                    let (prev_x, prev_y) = self.rooms[self.rooms.len() - 1].center();
                     if rng.range(0, 2) == 1 {
                         apply_horizontal_tunnel(&mut self.map, prev_x, new_x, prev_y);
                         apply_vertical_tunnel(&mut self.map, prev_y, new_y, new_x);
@@ -70,11 +72,11 @@ impl SimpleMapBuilder {
                     }
                 }
 
-                self.map.rooms.push(new_room);
+                self.rooms.push(new_room);
             }
         }
 
-        let start_pos = self.map.rooms[0].center();
+        let start_pos = self.rooms[0].center();
         self.starting_position = Position {
             x: start_pos.0,
             y: start_pos.1,
