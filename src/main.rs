@@ -84,15 +84,15 @@ fn main() -> BError {
     gs.ecs.register::<Name>();
 
     // Add shared data for the world
-    let map = map_builders::build_random_map();
-    let (player_x, player_y) = map.rooms[0].center();
+    let mut builder = map_builders::random_builder();
+    let (mut map, player_start) = builder.build_map();
 
     // Create the player entity
     gs.ecs
         .create_entity()
         .with(Position {
-            x: player_x,
-            y: player_y,
+            x: player_start.x,
+            y: player_start.y,
         })
         .with(Renderable {
             glyph: 0x40,
@@ -111,11 +111,9 @@ fn main() -> BError {
         .build();
 
     // Create some monster entities
-    for room in map.rooms.iter().skip(1) {
-        spawner::spawn_room(&mut gs.ecs, room);
-    }
+    builder.spawn_entities(&mut map, &mut gs.ecs);
 
-    gs.ecs.insert(Point::new(player_x, player_y));
+    gs.ecs.insert(Point::new(player_start.x, player_start.y));
     gs.ecs.insert(map);
 
     bracket_lib::terminal::main_loop(context, gs)

@@ -1,21 +1,30 @@
 use bracket_lib::random::RandomNumberGenerator;
 
-use super::common::*;
-use super::MapBuilder;
-use crate::{Map, Rect, MAP_HEIGHT, MAP_WIDTH};
+use super::{common::*, MapBuilder};
+use crate::{spawner, Map, Position, Rect, MAP_HEIGHT, MAP_WIDTH};
 
 pub struct SimpleMapBuilder {}
 
 impl MapBuilder for SimpleMapBuilder {
-    fn build() -> Map {
+    fn build_map(&mut self) -> (Map, Position) {
         let mut map = Map::new();
-        SimpleMapBuilder::rooms_and_corridors(&mut map);
-        map
+        let playerpos = SimpleMapBuilder::rooms_and_corridors(&mut map);
+        (map, playerpos)
+    }
+
+    fn spawn_entities(&mut self, map: &Map, ecs: &mut specs::World) {
+        for room in map.rooms.iter().skip(1) {
+            spawner::spawn_room(ecs, room);
+        }
     }
 }
 
 impl SimpleMapBuilder {
-    fn rooms_and_corridors(map: &mut Map) {
+    pub fn new() -> SimpleMapBuilder {
+        SimpleMapBuilder {}
+    }
+
+    fn rooms_and_corridors(map: &mut Map) -> Position {
         const MAX_ROOMS: i32 = 30;
         const MIN_SIZE: i32 = 6;
         const MAX_SIZE: i32 = 10;
@@ -51,6 +60,12 @@ impl SimpleMapBuilder {
 
                 map.rooms.push(new_room);
             }
+        }
+
+        let start_pos = map.rooms[0].center();
+        Position {
+            x: start_pos.0,
+            y: start_pos.1,
         }
     }
 }
