@@ -15,6 +15,7 @@ mod monster_ai_system;
 pub use monster_ai_system::*;
 mod spawner;
 pub use spawner::*;
+pub mod map_builders;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -83,7 +84,7 @@ fn main() -> BError {
     gs.ecs.register::<Name>();
 
     // Add shared data for the world
-    let map = Map::new_map_rooms_and_corridors();
+    let map = map_builders::build_random_map();
     let (player_x, player_y) = map.rooms[0].center();
 
     // Create the player entity
