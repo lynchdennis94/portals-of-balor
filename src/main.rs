@@ -85,7 +85,9 @@ fn main() -> BError {
 
     // Add shared data for the world
     let mut builder = map_builders::random_builder();
-    let (mut map, player_start) = builder.build_map();
+    builder.build_map();
+    let map = builder.get_map();
+    let player_start = builder.get_starting_position();
 
     // Create the player entity
     gs.ecs
@@ -111,7 +113,7 @@ fn main() -> BError {
         .build();
 
     // Create some monster entities
-    builder.spawn_entities(&mut map, &mut gs.ecs);
+    builder.spawn_entities(&mut gs.ecs);
 
     gs.ecs.insert(Point::new(player_start.x, player_start.y));
     gs.ecs.insert(map);

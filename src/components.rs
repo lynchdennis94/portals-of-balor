@@ -2,7 +2,7 @@ use bracket_lib::terminal::{FontCharType, Point, RGB};
 use specs::prelude::*;
 use specs_derive::*;
 
-#[derive(Component)]
+#[derive(Clone, Component)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
