@@ -23,3 +23,6 @@ Week Two - Sections 2.2 and 2.3
 Week Three - Sections 2.4 and 2.5
 ----
 * I'm not entirely clear on the read vs. write storage usage in the tutorial; for example, when defining the visibility system, the position components are handled via WriteStorage. But the visibility system shouldn't be updating position components, so I've modified this to only use ReadStorage.
+* I skipped ahead a bit to section 2.8, where the spawner is defined. By incorporating the spawner for map creation, it lets me then jump ahead to the map generation section to start making more interesting maps.
+* In the spawner code, I've defined the consts for map width and height as i32 vars; I don't know why the change to usize happened (possibly a refactor I missed when skipping ahead), but it would have required a bunch of downstream changes in existing code that I don't know we need. If I _do_ end up needing it, I'll make the change back.
+* I _also_ needed to add in the spawner logic for monsters. Right now it's mostly a copy-paste from section 2.5; when I get to section 2.8 later, I'll redo this.

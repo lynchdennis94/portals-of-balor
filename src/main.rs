@@ -1,7 +1,4 @@
-use bracket_lib::{
-    random::RandomNumberGenerator,
-    terminal::{BError, BTerm, FontCharType, GameState, Point, RGB},
-};
+use bracket_lib::terminal::{BError, BTerm, GameState, Point, RGB};
 use specs::prelude::*;
 
 mod components;
@@ -16,6 +13,8 @@ mod visibility_system;
 pub use visibility_system::*;
 mod monster_ai_system;
 pub use monster_ai_system::*;
+mod spawner;
+pub use spawner::*;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -111,40 +110,8 @@ fn main() -> BError {
         .build();
 
     // Create some monster entities
-    let mut rng = RandomNumberGenerator::new();
     for room in map.rooms.iter().skip(1) {
-        let (x, y) = room.center();
-        let glyph: FontCharType;
-        let monster_name: String;
-        let roll = rng.roll_dice(1, 2);
-        match roll {
-            1 => {
-                glyph = 0x67;
-                monster_name = "Goblin".to_string()
-            }
-            _ => {
-                glyph = 0x6F;
-                monster_name = "Orc".to_string()
-            }
-        }
-        gs.ecs
-            .create_entity()
-            .with(Position { x, y })
-            .with(Renderable {
-                glyph: glyph,
-                fg: RGB::named(bracket_lib::terminal::RED),
-                bg: RGB::named(bracket_lib::terminal::BLACK),
-            })
-            .with(Viewshed {
-                visible_tiles: Vec::new(),
-                range: 8,
-                dirty: true,
-            })
-            .with(Monster {})
-            .with(Name {
-                name: monster_name.to_string(),
-            })
-            .build();
+        spawner::spawn_room(&mut gs.ecs, room);
     }
 
     gs.ecs.insert(Point::new(player_x, player_y));

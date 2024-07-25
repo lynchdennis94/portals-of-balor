@@ -1,4 +1,4 @@
-use super::Rect;
+use super::{Rect, MAP_HEIGHT, MAP_WIDTH};
 use bracket_lib::{
     pathfinding::{Algorithm2D, BaseMap},
     prelude::Point,
@@ -7,9 +7,6 @@ use bracket_lib::{
 };
 use specs::World;
 use std::cmp::{max, min};
-
-pub const MAP_WIDTH: i32 = 80;
-pub const MAP_HEIGHT: i32 = 50;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
