@@ -31,6 +31,7 @@ impl MapBuilder for SimpleMapBuilder {
 
 impl SimpleMapBuilder {
     pub fn new() -> SimpleMapBuilder {
+        println!("Using Simple Map Builder");
         SimpleMapBuilder {
             map: Map::new(),
             starting_position: Position { x: 0, y: 0 },
