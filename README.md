@@ -20,7 +20,7 @@ Week Two - Sections 2.2 and 2.3
 * At some point I know the tutorial will clean up the 'magic numbers', but they're already annoying me; I've added the constants for map height and width and cleaned up references to these values that were input directly. I've also updated the terminal builder to use these constants directly
 * I'm not _entirely_ sure I have the right placement/calls for the rect implementation. There's an existing rect implementation in bracket_lib, so I may have just made it more difficult to discern between the two. For now, I'm using the explicit super::Rect suggestion in the book, but this may be an opportunity to use the library in the future
 
-Week Three - Sections 2.4 and 2.5 (bonus Sections 4.1, 4.3, 4.6)
+Week Three - Sections 2.4 and 2.5 (bonus Sections 4.1, 4.3, 4.5)
 ----
 * I'm not entirely clear on the read vs. write storage usage in the tutorial; for example, when defining the visibility system, the position components are handled via WriteStorage. But the visibility system shouldn't be updating position components, so I've modified this to only use ReadStorage.
 * I skipped ahead a bit to section 2.8, where the spawner is defined. By incorporating the spawner for map creation, it lets me then jump ahead to the map generation section to start making more interesting maps.
@@ -29,4 +29,5 @@ Week Three - Sections 2.4 and 2.5 (bonus Sections 4.1, 4.3, 4.6)
 * Since I had extra time this week, I added in some of what I wanted to get done last week - more interesting maps! I implemented the following:
     * Section 4.1 - this let me refactor the code a lot into builders and made the other map-building sections easier. This _did_ require me dipping a bit into later parts of the code (specifically parts of Section 2.8) so I could put a spawner together. When I get to that part in week five, I'll review it to make sure I didn't miss anything related that wasn't relevant for the room generation, but without peeking ahead this section wouldn't have really been possible to follow
     * Section 4.3 - the first new map time (BSP Rooms), it wasn't _that_ much different from the 'simple rooms' look at the end of the day. But it let me dabble in some map creation
-    * Section 4.6 - this map type (Drunkard's walk) seemed unique enough to give my game more flavor, and if I have more time from now until the end I'd like to add other map types to continue giving more flavor
+    * Section 4.5 - this map type (Cellular Automata) seemed unique enough to give my game more flavor, and if I have more time from now until the end I'd like to add other map types to continue giving more flavor. I wanted to add drunkards walk, but there was a lot relying on the Cellular Automata implementation so I figured I'd start here instead
+* I did _not_ add the testing harness from Section 4.2 - while I think it's a useful tool and something I'll potentially leverage in the future, for the sake of building maps from a tutorial it didn't seem as necessary for this exercise.

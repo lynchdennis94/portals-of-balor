@@ -6,6 +6,8 @@ use bracket_lib::random::RandomNumberGenerator;
 use simple_map::*;
 mod bsp_dungeon;
 use bsp_dungeon::*;
+mod cellular_automata;
+use cellular_automata::*;
 use specs::World;
 mod common;
 
@@ -18,9 +20,10 @@ pub trait MapBuilder {
 
 pub fn random_builder() -> Box<dyn MapBuilder> {
     let mut rng = RandomNumberGenerator::new();
-    let builder_idx = rng.roll_dice(1, 2);
+    let builder_idx = rng.roll_dice(1, 3);
     match builder_idx {
         1 => Box::new(SimpleMapBuilder::new()),
-        _ => Box::new(BspDungeonBuilder::new()),
+        2 => Box::new(BspDungeonBuilder::new()),
+        _ => Box::new(CellularAutomataBuilder::new()),
     }
 }

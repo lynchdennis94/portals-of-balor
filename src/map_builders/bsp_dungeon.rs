@@ -58,6 +58,7 @@ impl MapBuilder for BspDungeonBuilder {
     }
 
     fn spawn_entities(&mut self, ecs: &mut specs::World) {
+        ecs.insert(self.get_map());
         for room in self.rooms.iter().skip(1) {
             spawner::spawn_room(ecs, room);
         }
