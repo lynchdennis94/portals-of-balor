@@ -37,11 +37,19 @@ impl<'a> System<'a> for MonsterAI {
                     &mut *map,
                 );
 
-                // Bug? Monsters still stack up on each other
                 if path.success && path.steps.len() > 1 {
+                    // Clear the 'blocked' status from the old spot
+                    let old_idx = map.xy_idx(pos.x, pos.y);
+                    map.blocked[old_idx] = false;
+
+                    // Update the position and viewshed of the monster
                     pos.x = path.steps[1] as i32 % map.width;
                     pos.y = path.steps[1] as i32 / map.width;
                     viewshed.dirty = true;
+
+                    // Update the 'blocked' map with the new position
+                    let new_idx = map.xy_idx(pos.x, pos.y);
+                    map.blocked[new_idx] = true;
                 }
             }
         }

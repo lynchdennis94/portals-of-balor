@@ -1,6 +1,6 @@
 use crate::{RunState, Viewshed};
 
-use super::{Map, Player, Position, State, TileType, MAP_HEIGHT, MAP_WIDTH};
+use super::{Map, Player, Position, State, MAP_HEIGHT, MAP_WIDTH};
 use bracket_lib::terminal::{BTerm, Point, VirtualKeyCode};
 use specs::prelude::*;
 use std::cmp::{max, min};
