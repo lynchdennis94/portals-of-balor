@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{Map, Monster, Name, Position, Renderable, TileType, Viewshed};
+use crate::{BlocksTile, Map, Monster, Name, Position, Renderable, TileType, Viewshed};
 
 use super::Rect;
 use bracket_lib::{color::RGB, random::RandomNumberGenerator, terminal::FontCharType};
@@ -45,6 +45,7 @@ pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
         .with(Name {
             name: monster_name.to_string(),
         })
+        .with(BlocksTile {})
         .build();
 }
 

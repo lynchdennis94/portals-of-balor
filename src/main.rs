@@ -13,6 +13,8 @@ mod visibility_system;
 pub use visibility_system::*;
 mod monster_ai_system;
 pub use monster_ai_system::*;
+mod map_indexing_system;
+pub use map_indexing_system::*;
 mod spawner;
 pub use spawner::*;
 pub mod map_builders;
@@ -57,8 +59,10 @@ impl State {
     fn run_systems(&mut self) {
         let mut vis = VisibilitySystem {};
         let mut mob = MonsterAI {};
+        let mut mapindex = MapIndexingSystem {};
         vis.run_now(&self.ecs);
         mob.run_now(&self.ecs);
+        mapindex.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -82,6 +86,7 @@ fn main() -> BError {
     gs.ecs.register::<Viewshed>();
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
+    gs.ecs.register::<BlocksTile>();
 
     // Add shared data for the world
     let mut builder = map_builders::random_builder();
