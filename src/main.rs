@@ -15,6 +15,10 @@ mod monster_ai_system;
 pub use monster_ai_system::*;
 mod map_indexing_system;
 pub use map_indexing_system::*;
+mod melee_combat_system;
+pub use melee_combat_system::*;
+mod damage_system;
+pub use damage_system::*;
 mod spawner;
 pub use spawner::*;
 pub mod map_builders;
@@ -35,6 +39,7 @@ impl GameState for State {
 
         if self.runstate == RunState::Running {
             self.run_systems();
+            damage_system::delete_the_dead(&mut self.ecs);
             self.runstate = RunState::Paused;
         } else {
             self.runstate = player_input(self, ctx);
@@ -60,9 +65,13 @@ impl State {
         let mut vis = VisibilitySystem {};
         let mut mob = MonsterAI {};
         let mut mapindex = MapIndexingSystem {};
+        let mut melee = MeleeCombatSystem {};
+        let mut damagesystem = DamageSystem {};
         vis.run_now(&self.ecs);
         mob.run_now(&self.ecs);
         mapindex.run_now(&self.ecs);
+        melee.run_now(&self.ecs);
+        damagesystem.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -87,6 +96,9 @@ fn main() -> BError {
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
+    gs.ecs.register::<CombatStats>();
+    gs.ecs.register::<SufferDamage>();
+    gs.ecs.register::<WantsToMelee>();
 
     // Add shared data for the world
     let mut builder = map_builders::random_builder();
@@ -114,6 +126,12 @@ fn main() -> BError {
             visible_tiles: Vec::new(),
             range: 8,
             dirty: true,
+        })
+        .with(CombatStats {
+            max_hp: 30,
+            hp: 30,
+            defense: 2,
+            power: 5,
         })
         .build();
 
