@@ -107,7 +107,8 @@ fn main() -> BError {
     let player_start = builder.get_starting_position();
 
     // Create the player entity
-    gs.ecs
+    let player_entity = gs
+        .ecs
         .create_entity()
         .with(Position {
             x: player_start.x,
@@ -134,6 +135,8 @@ fn main() -> BError {
             power: 5,
         })
         .build();
+
+    gs.ecs.insert(player_entity);
 
     // Create some monster entities
     builder.spawn_entities(&mut gs.ecs);
