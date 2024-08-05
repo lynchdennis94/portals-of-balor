@@ -9,6 +9,10 @@ mod player;
 pub use player::*;
 mod rect;
 pub use rect::Rect;
+mod gui;
+pub use gui::*;
+mod gamelog;
+pub use gamelog::*;
 mod visibility_system;
 pub use visibility_system::*;
 mod monster_ai_system;
@@ -79,6 +83,8 @@ impl GameState for State {
                 ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
             }
         }
+
+        gui::draw_ui(&self.ecs, ctx);
     }
 }
 
@@ -100,7 +106,7 @@ impl State {
 
 fn main() -> BError {
     use bracket_lib::terminal::BTermBuilder;
-    let context: BTerm = BTermBuilder::simple(MAP_WIDTH, MAP_HEIGHT)
+    let context: BTerm = BTermBuilder::simple(80, 50)
         .expect("Could not construct BTermBuilder")
         .with_title("Portals of Balor")
         .with_tile_dimensions(16, 16)
@@ -162,6 +168,9 @@ fn main() -> BError {
 
     gs.ecs.insert(Point::new(player_start.x, player_start.y));
     gs.ecs.insert(RunState::PreRun);
+    gs.ecs.insert(GameLog {
+        entries: vec!["Welcome to Rusty Roguelike".to_string()],
+    });
     gs.ecs.insert(map);
 
     bracket_lib::terminal::main_loop(context, gs)

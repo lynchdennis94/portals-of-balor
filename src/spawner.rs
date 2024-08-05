@@ -9,7 +9,7 @@ use bracket_lib::{color::RGB, random::RandomNumberGenerator, terminal::FontCharT
 use specs::{Builder, World, WorldExt};
 
 pub const MAP_WIDTH: i32 = 80;
-pub const MAP_HEIGHT: i32 = 50;
+pub const MAP_HEIGHT: i32 = 43;
 pub const MAX_MONSTERS: i32 = 3;
 pub const MAP_COUNT: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 

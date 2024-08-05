@@ -29,6 +29,10 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
         let destination_idx = map.xy_idx(possible_x, possible_y);
 
         for potential_target in map.tile_content[destination_idx].iter() {
+            let player_entity = players.get(*potential_target);
+            if let Some(_player_target) = player_entity {
+                continue; // We don't want to attack ourselves
+            }
             let target = combat_stats.get(*potential_target);
             if let Some(_target) = target {
                 wants_to_melee
