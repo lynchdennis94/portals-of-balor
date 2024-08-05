@@ -31,3 +31,7 @@ Week Three - Sections 2.4 and 2.5 (bonus Sections 4.1, 4.3, 4.5)
     * Section 4.3 - the first new map time (BSP Rooms), it wasn't _that_ much different from the 'simple rooms' look at the end of the day. But it let me dabble in some map creation
     * Section 4.5 - this map type (Cellular Automata) seemed unique enough to give my game more flavor, and if I have more time from now until the end I'd like to add other map types to continue giving more flavor. I wanted to add drunkards walk, but there was a lot relying on the Cellular Automata implementation so I figured I'd start here instead
 * I did _not_ add the testing harness from Section 4.2 - while I think it's a useful tool and something I'll potentially leverage in the future, for the sake of building maps from a tutorial it didn't seem as necessary for this exercise.
+
+Week Four - Sections 2.6 and 2.7
+----
+* There was a bug in the monster movement code, where monsters were still stacking up on each other if they both were next to each other, next to the player, and the player moved away. I believe this was because the blocked state was getting updated in the map indexing system, but NOT in the movement system. This meant that monster A would move, but the 'blocked' spot would be the old spot. The second monster, not seeing the spot as blocked, would ALSO move there (as it was the most logical spot), and the monsters would then be stacked. By updating the blocked spot for each monster when processing their move, we now have an updated blocked map.
