@@ -35,3 +35,4 @@ Week Three - Sections 2.4 and 2.5 (bonus Sections 4.1, 4.3, 4.5)
 Week Four - Sections 2.6 and 2.7
 ----
 * There was a bug in the monster movement code, where monsters were still stacking up on each other if they both were next to each other, next to the player, and the player moved away. I believe this was because the blocked state was getting updated in the map indexing system, but NOT in the movement system. This meant that monster A would move, but the 'blocked' spot would be the old spot. The second monster, not seeing the spot as blocked, would ALSO move there (as it was the most logical spot), and the monsters would then be stacked. By updating the blocked spot for each monster when processing their move, we now have an updated blocked map.
+* I chose not to use the optional scan-lilnes, since I'm not a huge fan of the look. I might revisit this later, but for now I'd prefer just the normal text output
